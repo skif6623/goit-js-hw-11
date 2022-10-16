@@ -10,8 +10,11 @@ export function createCardMarkup(images) {
         comments,
         downloads,
       }) => {
-        return /*html*/ ` <div class="photo-card">
-          <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+        return /*html*/ ` 
+        <div class="photo-card">
+          <a class="photo-card__link" href="${largeImageURL}">
+            <img class="photo-card__image" src="${webformatURL}" alt="${tags}" loading="lazy" />
+          </a>;
           <div class="info">
             <p class="info-item">
               <b>Likes ${likes}</b>

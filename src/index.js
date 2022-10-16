@@ -4,7 +4,12 @@ import { Notify } from 'notiflix';
 import { PixabayAPI } from './js/pixabay-api';
 import { refs } from './js/refs';
 import { createCardMarkup } from './js/createCardMarkup';
+const options = {
+  captionDelay: 250,
+  captionsData: 'alt',
+};
 const pixabay = new PixabayAPI();
+const lightbox = new SimpleLightbox('.gallery a', options);
 
 refs.form.addEventListener('submit', handleSubmit);
 refs.loadMoreBtn.addEventListener('click', onLoadMoreBtnClick);
@@ -45,6 +50,7 @@ function handleSubmit(e) {
       if (pixabay.isShowLoadMore) {
         refs.loadMoreBtn.classList.remove('is-hidden');
       }
+      lightbox.refresh();
     })
     .catch(error => {
       Notify.failure(error.message, 'Щось пішло не так!');
@@ -62,11 +68,11 @@ function onLoadMoreBtnClick() {
 
   pixabay
     .getPhotos()
-    .then(({ hits, total }) => {
+    .then(({ hits }) => {
       const markup = createCardMarkup(hits);
       refs.gallery.insertAdjacentHTML('beforeend', markup);
 
-      pixabay.calculateTotalPages(total);
+      lightbox.refresh();
     })
     .catch(error => {
       Notify.failure(error.message, 'Щось пішло не так!');
@@ -79,8 +85,3 @@ function clearQuerry() {
   refs.gallery.innerHTML = '';
   refs.loadMoreBtn.classList.add('is-hidden');
 }
-
-let lightbox = new SimpleLightbox('.gallery a', {
-  captionDelay: 250,
-  captionsData: 'alt',
-});
