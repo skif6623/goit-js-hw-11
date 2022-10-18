@@ -1,24 +1,23 @@
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://pixabay.com/api/';
+
 export class PixabayAPI {
   #PIXABAY_KEY = '26725186-0eb3948d92fc479f1d029e31a';
-  #BASE_URL = 'https://pixabay.com/api/';
   #query = '';
   #page = 1;
   #perPage = 40;
   #totalPages = 0;
 
-  getPhotos() {
-    const url = `${this.#BASE_URL}?key=${this.#PIXABAY_KEY}&q=${
-      this.#query
-    }&page=${this.#page}&per_page=${
+  async getPhotos() {
+    const url = `?key=${this.#PIXABAY_KEY}&q=${this.#query}&page=${
+      this.#page
+    }&per_page=${
       this.#perPage
-    }&image_type=photo&orientation=horizotal&safesearch=true`;
+    }&image_type=photo&orientation=horizontal&safesearch=true`;
 
-    return fetch(url).then(response => {
-      if (!response.ok) {
-        throw new Error(response.status);
-      }
-      return response.json();
-    });
+    const { data } = await axios.get(url);
+    return data;
   }
 
   get query() {
